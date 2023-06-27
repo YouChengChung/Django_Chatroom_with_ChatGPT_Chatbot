@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 #from django.http import HttpResponse
 #from django.contrib import messages
 #from django.contrib.auth.decorators import login_required
-#from django.db.models import Q
+from django.db.models import Q
 #from django.contrib.auth import authenticate, login, logout
-from .models import Room
+from .models import Room,Topic
 from .forms import RoomForm #, UserForm, MyUserCreationForm
 # Create your views here.
 
@@ -16,8 +16,16 @@ from .forms import RoomForm #, UserForm, MyUserCreationForm
 
 
 def home(request):
-    rooms = Room.objects.all()
-    context={'rooms': rooms}
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    rooms = Room.objects.filter(
+        Q(topic__name__icontains=q)| #filter parameter符合的topic，icontains使指打部分也能篩選
+        Q(name__icontains=q)
+        #Q(host__icontains=q)
+        )
+    topics = Topic.objects.all()
+    rooms_count  = rooms.count()
+
+    context={'rooms': rooms,'topics':topics,'rooms_count':rooms_count}
     return render (request, "base/home.html",context)
 
 def room(request,pk):
