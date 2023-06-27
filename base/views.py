@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 #from django.http import HttpResponse
-#from django.contrib import messages
+from django.contrib import messages #login時的error message
 #from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-#from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from .models import Room,Topic
 from .forms import RoomForm #, UserForm, MyUserCreationForm
 # Create your views here.
@@ -13,6 +14,38 @@ from .forms import RoomForm #, UserForm, MyUserCreationForm
 #     {'id': 2, 'name': 'Design with me'},
 #     {'id': 3, 'name': 'Frontend developers'},
 # ]
+
+
+def loginPage(request):
+    page = 'login'
+    # if request.user.is_authenticated:
+    #     return redirect('home')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try: #確認 user存在
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request, 'User does not exist') #Flash message
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Username OR password does not exit') #Flash message
+
+    context = {'page': page}
+    return render(request, 'base/login_register.html', context)
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect('home')
 
 
 def home(request):
