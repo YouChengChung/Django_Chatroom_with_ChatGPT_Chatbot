@@ -14,7 +14,8 @@ class Room(models.Model): #Room 是 Topic 的child
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True) #Class topic在上面，所以直接用，如果是在下面，要以字串'Topic'呼叫
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
-    #participants = models.ManyToManyField(User, related_name='participants', blank=True)
+    participants = models.ManyToManyField(
+        User, related_name='participants', blank=True) #前面用過User表格了，這裡要在取用另一個User表格，所以要related_name
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
