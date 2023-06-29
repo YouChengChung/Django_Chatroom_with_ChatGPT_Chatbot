@@ -36,6 +36,7 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
+            print(username,'has log in')
             return redirect('home')
         else:
             messages.error(request, 'Username OR password does not exit') #Flash message
@@ -123,6 +124,8 @@ def createRoom(request):
         print(request.POST)# 查看後端收到REQUSET內容，為dict格式
         form = RoomForm(request.POST)
         if form.is_valid():
+            room =  form.save(commit=False)
+            room.host = request.user
             form.save()
             return redirect('home') #在urls.py裡，home page有name，所以這邊不用使用網址，用name作為redirect就行
     #     topic_name = request.POST.get('topic')

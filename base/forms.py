@@ -16,7 +16,7 @@ class RoomForm(ModelForm):
     class Meta: #create a form based on values in models.Room
         model = Room
         fields = '__all__' #give me all those field，也能用['name','body']格式選擇
-        #exclude = ['host', 'participants']
+        exclude = ['host', 'participants'] #創建room的時候不要顯示
 
 
 # class UserForm(ModelForm):
