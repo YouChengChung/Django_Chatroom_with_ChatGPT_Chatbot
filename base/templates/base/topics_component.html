@@ -5,7 +5,7 @@
     </div>
     <ul class="topics__list">
       <li>
-        <a href="{% url 'home' %}" class="active">All <span>{{topics.count}} incorrect</span></a>
+        <a href="{% url 'home' %}" class="active">All <span>{{topics.count}} topics</span></a>
       </li>
       {% for topic in topics %}
 
