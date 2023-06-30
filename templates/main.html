@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>StudyBuddy - Find study partners around the world!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+    <title>StudyBuddy - Find study partners around the world!</title>
+  </head>
 
-    <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
-
-</head>
-
-<body>
+  <body>
 
     {% include 'navbar.html' %}
 
@@ -24,11 +22,13 @@
     </ul>
     {% endif %}
 
+    
     {% block content %}
 
 
     {% endblock %}
 
-</body>
-
+    <script src="{% static 'js/jsscript.js' %}"></script>
+  </body>
 </html>
+
