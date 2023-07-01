@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <!-- 不確定是做什麼，每次send request都要有 -->
+        {{form.as_p}}
+        <!-- as_p :as p 格式好看-->
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+
+{% endblock content %}

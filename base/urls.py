@@ -16,10 +16,12 @@ urlpatterns = [
     path('delete-room/<str:pk>/', views.deleteRoom, name="delete-room"),
     path('delete-message/<str:pk>/', views.deleteMessage, name="delete-message"),
 
+    path('update-user/', views.updateUser, name="update-user"),
 
 ]
 
 """
+瀏覽器輸入網址後，啟動views對應的function
 urlpatterns = [
     #path('login/', views.loginPage, name="login"),
     #path('logout/', views.logoutUser, name="logout"),

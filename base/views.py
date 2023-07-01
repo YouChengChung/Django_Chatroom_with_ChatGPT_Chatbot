@@ -20,7 +20,7 @@ from .forms import RoomForm #, UserForm, MyUserCreationForm
 def loginPage(request):
     page = 'login'
     if request.user.is_authenticated: #已登入者會直接導向home
-        return redirect('home')
+        return redirect('home') #在urls.py裡，home page有name，所以這邊不用使用網址，用name作為redirect就行
 
     if request.method == 'POST':
         username = request.POST.get('username').lower()
@@ -119,28 +119,28 @@ def userProfile(request,pk):
 @login_required(login_url='login')
 def createRoom(request):
     form = RoomForm()
-    #topics = Topic.objects.all()
+    topics = Topic.objects.all()
     if request.method == 'POST':
         print(request.POST)# 查看後端收到REQUSET內容，為dict格式
-        form = RoomForm(request.POST)
-        if form.is_valid():
-            room =  form.save(commit=False)
-            room.host = request.user
-            form.save()
-            return redirect('home') #在urls.py裡，home page有name，所以這邊不用使用網址，用name作為redirect就行
-    #     topic_name = request.POST.get('topic')
-    #     topic, created = Topic.objects.get_or_create(name=topic_name)
-
-    #     Room.objects.create(
-    #         host=request.user,
-    #         topic=topic,
-    #         name=request.POST.get('name'),
-    #         description=request.POST.get('description'),
-    #     )
-    #     return redirect('home')
-
-    context = {'form': form}
-
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name) #決定輸入的topic是否存在
+        
+        Room.objects.create(
+            host=request.user,
+            topic=topic,
+            name=request.POST.get('name'),
+            description=request.POST.get('description'),
+        )
+        return redirect('home') #在urls.py裡，home page有name，所以這邊不用使用網址，用name作為redirect就行
+    
+        # form = RoomForm(request.POST)
+        # if form.is_valid():
+        #     room =  form.save(commit=False)
+        #     room.host = request.user
+        #     form.save()
+        #     return redirect('home') 
+        
+    context = {'form': form,'topics':topics}
     return render(request, 'base/room_form.html', context)
 
 
@@ -149,24 +149,21 @@ def createRoom(request):
 def updateRoom(request, pk): #pk:what item are we update
     room = Room.objects.get(id=pk) #get the item we are updating
     form = RoomForm(instance=room) #表格將會prefill with room，也就是剛get到的值
-    # topics = Topic.objects.all()
+    topics = Topic.objects.all()
     if request.user != room.host:
         return HttpResponse('Your are not allowed here!!')
 
     if request.method == 'POST':
-        form = RoomForm(request.POST,instance=room)#instance = ? :Which room to update
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    #     topic_name = request.POST.get('topic')
-    #     topic, created = Topic.objects.get_or_create(name=topic_name)
-    #     room.name = request.POST.get('name')
-    #     room.topic = topic
-    #     room.description = request.POST.get('description')
-    #     room.save()
-    #     return redirect('home')
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)    
+        room.name = request.POST.get('name')
+        room.topic = topic
+        room.description = request.POST.get('description')
+        room.save()
 
-    context = {'form': form, 'room': room}
+        return redirect('home')#在urls.py裡，home page有name，所以這邊不用使用網址，用name作為redirect就行
+
+    context = {'form': form,'topics':topics, 'room': room}
     return render(request, 'base/room_form.html', context)
 
 
@@ -194,3 +191,7 @@ def deleteMessage(request, pk):
         message.delete()
         return redirect('home')
     return render(request, 'base/delete.html', {'obj': message})
+
+@login_required(login_url='login')
+def updateUser(request):
+    return render(request,'base/update-user.html')
