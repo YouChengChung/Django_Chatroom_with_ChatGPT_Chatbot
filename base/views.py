@@ -8,6 +8,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm #內建註冊表格
 from .models import Room,Topic,Message
 from .forms import RoomForm ,UserForm #, MyUserCreationForm
+
+
+from .chatgpt import chatgpt
+
 # Create your views here.
 
 # rooms = [
@@ -229,3 +233,19 @@ def activityPage(request):
 
     context={'room_messages':room_messages}
     return render(request,'base/activity.html',context)
+
+
+@login_required(login_url='login')
+def gpt(request):
+    
+    chatbot = chatgpt()
+    if request.method=='POST':
+        user_input = request.POST.get('body')  # 这里可以替换为用户的输入
+        reply = chatbot.get_reply(user_input)
+        print(reply)
+
+    else:
+        reply  = chatbot.messages[-1]['content']
+        user_input=""
+    context={'reply':reply,'user_input':user_input}
+    return render(request,'base/GPTroom.html',context)
