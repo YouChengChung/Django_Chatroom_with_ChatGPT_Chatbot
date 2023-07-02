@@ -29,17 +29,25 @@ def loginPage(request):
 
         try: #確認 user存在
             user = User.objects.get(username=username)
+
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                print(username,'has log in')
+                return redirect('home')
+            else:
+                pass
+                messages.error(request, 'Incorrect Password') #Flash message
+
+
+
         except:
             messages.error(request, 'User does not exist') #Flash message
+            pass
 
-        user = authenticate(request, username=username, password=password)
+        
 
-        if user is not None:
-            login(request, user)
-            print(username,'has log in')
-            return redirect('home')
-        else:
-            messages.error(request, 'Username OR password does not exit') #Flash message
+
 
     context = {'page': page}
     return render(request, 'base/login_register.html', context)
