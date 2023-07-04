@@ -24,3 +24,8 @@ class chatgpt():
         reply = response["choices"][0]["message"]["content"]
         self.messages.append({"role": "assistant", "content": reply})
         return reply
+    
+    def get_previous(self):
+        pre_msg_list=[i['content'] for i in self.messages]
+        
+        return pre_msg_list

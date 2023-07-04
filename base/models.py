@@ -37,3 +37,9 @@ class Message(models.Model):                                    #user 是one-to-
 
     def __str__(self):
         return self.body[0:50]
+    
+
+class gptMessage(models.Model):
+    user = user = models.ForeignKey(User, on_delete=models.CASCADE)
+    body = models.TextField()
+    
