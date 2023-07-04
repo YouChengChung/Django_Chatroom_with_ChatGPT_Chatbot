@@ -6,18 +6,23 @@
         <h1>
             目前僅能單次對話，沒有記憶
         </h1>
+        <h2>
+            你好，我是一個ai情感支持機器人。我會提供一些的支援和建議讓您參考，來幫助您應對生活中的困難情況。有什麼我能幫忙的嗎?
+        </h2>
     </div>
    <div>
     <hr>
-    <div>
-        <h1>
-            {{user_input}}
-        </h1>
-    </div>
-    <hr>
-    <p>
-        {{reply}}
-    </p>
+    {% if user_input != "" %}
+        <div>
+            <h1>
+                {{user_input}}
+            </h1>
+        </div>
+        <hr>
+        <p>
+            {{reply}}
+        </p>
+    {% endif %}
    </div>
    <form action="" method="POST">
     {% csrf_token %}

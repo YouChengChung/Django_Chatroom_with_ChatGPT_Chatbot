@@ -237,15 +237,14 @@ def activityPage(request):
 
 @login_required(login_url='login')
 def gpt(request):
-    
+    reply  = ''
+    user_input=""
     if request.method=='POST':
         chatbot = chatgpt()
-        user_input = request.POST.get('body')  # 这里可以替换为用户的输入
-        reply = chatbot.get_reply(user_input)
-        print(reply)
+        if len(request.POST.get('body'))>1:
+            user_input = request.POST.get('body')  # 这里可以替换为用户的输入
+            reply = chatbot.get_reply(user_input)
+            print(reply)
 
-    else:
-        reply  = '你好，我是一個ai情感支持機器人。我會提供一些的支援和建議讓您參考，來幫助您應對生活中的困難情況。有什麼我能幫忙的嗎?'
-        user_input=""
     context={'reply':reply,'user_input':user_input}
     return render(request,'base/GPTroom.html',context)
