@@ -3,10 +3,10 @@ import openai
 
 class chatgpt():
     def __init__(self):
-        config = dotenv_values('openaiapikey.txt')
-        api_key = config['API_KEY']
-        openai.api_key = api_key
-        
+        #config = dotenv_values('openaiapikey.txt')
+        #api_key = config['API_KEY']
+        #openai.api_key = api_key
+        openai.api_key = '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'
         self.messages = []
 
         self.messages.append({"role": "system",
