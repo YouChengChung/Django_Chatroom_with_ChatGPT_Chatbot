@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm #內建註冊表格
-from .models import Room,Topic,Message
+from .models import Room,Topic,Message,gptMessage
 from .forms import RoomForm ,UserForm #, MyUserCreationForm
 
 
@@ -236,15 +236,29 @@ def activityPage(request):
 
 
 @login_required(login_url='login')
-def gpt(request):
+def gpt(request,pk):
+    
+    gptmsgs=gptMessage.objects.filter(user=request.user)
+    print('gptmsgs:',gptmsgs.gptreply)
     reply  = ''
     user_input=""
     if request.method=='POST':
         chatbot = chatgpt()
         if len(request.POST.get('body'))>1:
             user_input = request.POST.get('body')  # 这里可以替换为用户的输入
+            print('waiting for chatgpt response...')
             reply = chatbot.get_reply(user_input)
+            
+            gptMessage.objects.create(
+                user = request.user,
+                body = request.POST.get('body'),
+                gptreply = reply
+            )
             print(reply)
 
-    context={'reply':reply,'user_input':user_input}
+            return redirect('chatgpt')
+
+    context={'reply':reply,
+             'user_input':user_input,
+             'gptmsgs':gptmsgs}
     return render(request,'base/GPTroom.html',context)
