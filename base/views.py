@@ -238,8 +238,10 @@ def activityPage(request):
 @login_required(login_url='login')
 def gpt(request,pk):
     
-    gptmsgs=gptMessage.objects.filter(user=request.user)
-    print('gptmsgs:',gptmsgs.gptreply)
+    gptmsgobjs=gptMessage.objects.filter(user=request.user)
+    gptmsgs=[[i.body,i.gptreply] for i in gptmsgobjs]
+
+    #print('gptmsgs:',gptmsgs.gptreply)
     reply  = ''
     user_input=""
     if request.method=='POST':
