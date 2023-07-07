@@ -236,8 +236,7 @@ def activityPage(request):
 
 
 @login_required(login_url='login')
-def gpt(request,pk):
-    
+def gpt(request):
     gptmsgobjs=gptMessage.objects.filter(user=request.user)
     gptmsgs=[[i.body,i.gptreply] for i in gptmsgobjs]
 
