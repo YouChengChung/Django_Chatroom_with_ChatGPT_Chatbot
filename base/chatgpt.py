@@ -3,10 +3,10 @@ import openai
 
 class chatgpt():
     def __init__(self):
-        config = dotenv_values('openaiapikey.txt')
-        api_key = config['API_KEY']
-        openai.api_key = api_key
-        
+        #config = dotenv_values('openaiapikey.txt')
+        #api_key = config['API_KEY']
+        #openai.api_key = api_key
+        openai.api_key = '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'
         self.messages = []
 
         self.messages.append({"role": "system",
@@ -24,3 +24,8 @@ class chatgpt():
         reply = response["choices"][0]["message"]["content"]
         self.messages.append({"role": "assistant", "content": reply})
         return reply
+    
+    def get_previous(self):
+        pre_msg_list=[i['content'] for i in self.messages]
+        
+        return pre_msg_list

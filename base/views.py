@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm #內建註冊表格
-from .models import Room,Topic,Message
+from .models import Room,Topic,Message,gptMessage
 from .forms import RoomForm ,UserForm #, MyUserCreationForm
 
 
@@ -237,15 +237,41 @@ def activityPage(request):
 
 @login_required(login_url='login')
 def gpt(request):
+    gptmsgobjs=gptMessage.objects.filter(user=request.user)
+    gptmsgs=[[eachdata.body,eachdata.gptreply,eachdata] for eachdata in gptmsgobjs]
     
-    chatbot = chatgpt()
+    #print('gptmsgs:',gptmsgs.gptreply)
+    reply  = ''
+    user_input=""
     if request.method=='POST':
-        user_input = request.POST.get('body')  # 这里可以替换为用户的输入
-        reply = chatbot.get_reply(user_input)
-        print(reply)
+        chatbot = chatgpt()
+        if len(request.POST.get('body'))>1:
+            user_input = request.POST.get('body')  # 这里可以替换为用户的输入
+            print('waiting for chatgpt response...')
+            reply = chatbot.get_reply(user_input)
+            
+            gptMessage.objects.create(
+                user = request.user,
+                body = request.POST.get('body'),
+                gptreply = reply
+            )
+            print(reply)
 
-    else:
-        reply  = chatbot.messages[-1]['content']
-        user_input=""
-    context={'reply':reply,'user_input':user_input}
+            return redirect('chatgpt')
+
+    context={'reply':reply,
+             'user_input':user_input,
+             'gptmsgs':gptmsgs}
     return render(request,'base/GPTroom.html',context)
+
+
+@login_required(login_url='login')
+def deletegpt(request,pk):
+    
+    gptmsg = gptMessage.objects.filter(id=pk)
+    gptmsg_1 = gptmsg[0].body
+    print(gptmsg_1,"will be deleted!")
+    if request.method == 'POST':
+        gptmsg.delete()
+        return redirect('home')
+    return render(request, 'base/delete.html', {'obj': gptmsg_1})
