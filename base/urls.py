@@ -21,7 +21,8 @@ urlpatterns = [
     path('topics/', views.topicsPage, name="topics"),
     path('activity/', views.activityPage, name="activity"),
 
-    path('chatgpt/',views.gpt,name="chatgpt")
+    path('chatgpt/',views.gpt,name="chatgpt"),
+    path('delete-chatgpt/<str:pk>/',views.deletegpt,name="delete-chatgpt"),
 ]
 
 """

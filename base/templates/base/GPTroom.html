@@ -5,54 +5,116 @@
 <style>
     .gpt-container{
         display: grid;
-        grid-template-columns: 1fr 3fr 1fr;
+        grid-template-columns: 2fr 7fr 1fr;
     }
+    
+    .info-box {
+    width: 100%;
+    height: 600px;
+    margin-top: 5px;
+    padding-bottom: 13% ;
+    border: 5px solid rebeccapurple;
+    overflow: hidden;
+    }
+
+    .scroll-box {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 10px;
+    }
+
+    .msg-box {
+    width: 100%;
+    background-color: #461e6e;
+    border: 1px solid #b366ff;
+    margin-top: 5px;
+    padding: 5px;
+    border-radius:5px;
+    }
+    
+    .msg_set-box {
+    display:grid;
+    grid-template-columns: 10fr 1fr;
+    }
+
+
+
 </style>
 <div class="gpt-container">
-    <div>
-        <p>place1</p>
-        <h1>
-            目前僅能單次對話，沒有記憶
-        </h1>
+    <div class="activities__box">
+        <p>System Introduction</p>
+
         <hr style="color:green">
         <h2>
             你好，我是一個ai情感支持機器人。我會提供一些的支援和建議讓您參考，來幫助您應對生活中的困難情況。有什麼我能幫忙的嗎?
         </h2>
     </div>
-    <div class="all">
-        <div>
+    <div class="roomList">
+        <div class="room">
+            <div class="info-box">
+                <div class="scroll-box">
+                    {% for eachchat in gptmsgs %}
+                        <div class="msg_set-box">
+                            <div>
+                                {% for i in eachchat %}
+                                    {% if forloop.last == False %}
+                                        <div class="msg-box">
+                                        <h1>
+                                            {{i}}
+                                        </h1>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="delete-bottom">
+                                {% for j in eachchat %}
+                                    {% if forloop.last %}
+                                        <div class="msg-box">
+                                            <a href="{% url 'delete-chatgpt' j.id %}">
+                                                <div class="thread__delete">
+                                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                                    <title>remove</title>
+                                                    <path
+                                                        d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
+                                                    ></path>
+                                                    </svg>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
 
-
-            {% for eachchat in gptmsgs %}
-                {% for i in eachchat %}
-                <h1>
-                    {{i}}
-                    <hr style="color:green">
-
-                </h1>
-                {% endfor %}
-            {% endfor %}
-        </div>
-    <div>
-        
-        {% if user_input != "" %}
-            <div>
-                <h1>
-                    {{user_input}}
-                </h1>
+                    {% endfor %}
+                
+                </div>
+                <div class="room__message">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input name="body" placeholder="Write your message here..." />
+                    </form>
+                </div>
             </div>
-            <hr>
-            <p>
-                {{reply}}
-            </p>
-        {% endif %}
+
+            <!-- <div>
+                {% if user_input != "" %}
+                    <div>
+                        <h1>
+                            {{user_input}}
+                        </h1>
+                    </div>
+                    <hr>
+                    <p>
+                        {{reply}}
+                    </p>
+                {% endif %}
+            </div> -->
+        </div>
     </div>
-    <form action="" method="POST">
-        {% csrf_token %}
-        <input name="body" placeholder="Write your message here..." /></form>
-    </div>
-    <div>
-        <p>place3</p>
+    <div class="activities__box">
+        <p>Right box</p>
     </div>
 </div>
 {% endblock %}

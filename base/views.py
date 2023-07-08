@@ -238,8 +238,8 @@ def activityPage(request):
 @login_required(login_url='login')
 def gpt(request):
     gptmsgobjs=gptMessage.objects.filter(user=request.user)
-    gptmsgs=[[i.body,i.gptreply] for i in gptmsgobjs]
-
+    gptmsgs=[[eachdata.body,eachdata.gptreply,eachdata] for eachdata in gptmsgobjs]
+    
     #print('gptmsgs:',gptmsgs.gptreply)
     reply  = ''
     user_input=""
@@ -263,3 +263,15 @@ def gpt(request):
              'user_input':user_input,
              'gptmsgs':gptmsgs}
     return render(request,'base/GPTroom.html',context)
+
+
+@login_required(login_url='login')
+def deletegpt(request,pk):
+    
+    gptmsg = gptMessage.objects.filter(id=pk)
+    gptmsg_1 = gptmsg[0].body
+    print(gptmsg_1,"will be deleted!")
+    if request.method == 'POST':
+        gptmsg.delete()
+        return redirect('home')
+    return render(request, 'base/delete.html', {'obj': gptmsg_1})
