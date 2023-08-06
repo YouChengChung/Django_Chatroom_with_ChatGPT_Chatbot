@@ -13,7 +13,7 @@
     height: 600px;
     margin-top: 5px;
     padding-bottom: 13% ;
-    border: 5px solid rebeccapurple;
+    border: 3px solid #696d97;
     overflow: hidden;
     }
 
@@ -26,8 +26,8 @@
 
     .msg-box {
     width: 100%;
-    background-color: #461e6e;
-    border: 1px solid #b366ff;
+    /* background-color: #696d97; */
+    border: 1px solid #696d97;
     margin-top: 5px;
     padding: 5px;
     border-radius:5px;
@@ -50,6 +50,10 @@
         <h2>
             你好，我是一個ai情感支持機器人。我會提供一些的支援和建議讓您參考，來幫助您應對生活中的困難情況。有什麼我能幫忙的嗎?
         </h2>
+        <br>
+        <h2>
+            Hello, I am an AI emotional support robot. I will provide some assistance and advice for you to consider, to help you cope with challenging situations in life. How can I assist you?
+        </h2>
     </div>
     <div class="roomList">
         <div class="room">
@@ -71,9 +75,10 @@
                             <div class="delete-bottom">
                                 {% for j in eachchat %}
                                     {% if forloop.last %}
-                                        <div class="msg-box">
+                                        <div class="msg-box-x">
+                                            
                                             <a href="{% url 'delete-chatgpt' j.id %}">
-                                                <div class="thread__delete">
+                                                <div class="thread__delete" style="padding-top: 5pt;">
                                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                                     <title>remove</title>
                                                     <path
