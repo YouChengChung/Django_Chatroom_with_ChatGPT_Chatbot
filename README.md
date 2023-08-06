@@ -12,9 +12,9 @@ Welcome to my Django web application, a chatroom with an integrated AI Emotional
 
 ## Demo
 1. Homepage
-<img width="25%" height=25% src="https://github.com/YouChengChung/Pictures/blob/main/discord.png"/>
+<img width="50%" height=50% src="https://github.com/YouChengChung/Pictures/blob/main/discord.png"/>
 2. chatbot
-<img width="25%" height=25% src="https://github.com/YouChengChung/Pictures/blob/main/discord-chatgpt.png"/>
+<img width="50%" height=50% src="https://github.com/YouChengChung/Pictures/blob/main/discord-chatgpt.png"/>
 
 ## Features
 - Real-time chatroom functionality
