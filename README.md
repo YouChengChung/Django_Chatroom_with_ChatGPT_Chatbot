@@ -32,4 +32,4 @@ Being committed to continually improving this project. Here are some planned fea
 - **Selectable Sorting Options**: Different sorting options,such as sorting by time, author, or relevance.
 
 ## Acknowledgements
-This project is based on the work of Dennis Ivy, who created the Original Django Project StudyBud as a Django Beginners Course. I extend my heartfelt gratitude to him for his explicit introduction to Django.
+This project is based on the work of Dennis Ivy, who created the original django project [StudyBud](https://github.com/divanov11/StudyBud) as a Django Beginners Course. I extend my heartfelt gratitude to him for his explicit introduction to Django.
