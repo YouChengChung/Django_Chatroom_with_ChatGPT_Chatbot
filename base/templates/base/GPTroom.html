@@ -48,7 +48,7 @@
 
         <hr style="color:green">
         <h2>
-            你好，我是一個ai情感支持機器人。我會提供一些的支援和建議讓您參考，來幫助您應對生活中的困難情況。有什麼我能幫忙的嗎?
+            Ask something...
         </h2>
         <br>
         <h2>
@@ -124,4 +124,15 @@
     </div>
 </div>
 </div>
+<div>{{ warningmsg }}</div>
+<!-- 使用 JavaScript 處理 warningmsg -->
+<script type="text/javascript">
+    var warningMsg = "{{ warningmsg }}";
+    console.log("Warning message value:", warningMsg);
+
+    if (warningMsg === 'True') {
+        alert('Error');
+    }
+</script>
+
 {% endblock %}
