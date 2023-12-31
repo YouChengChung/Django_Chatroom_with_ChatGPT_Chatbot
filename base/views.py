@@ -246,7 +246,15 @@ def gpt(request):
     warningmsg=""
     if request.method=='POST':
         chatbot = chatgpt()
-        if len(request.POST.get('body'))>1:
+        print(f"the openai apikey： {chatbot.api_key}")
+        print(f"request.POST.get('userInput')={request.POST.get('userInput')}")
+        prompt_input = request.POST.get('userInput')
+        # 來自prompt的msg
+        if prompt_input:
+            # prompt 输入
+            print(f"Received prompt input: {prompt_input}")
+        # input box 輸入
+        elif 'body' in request.POST and len(request.POST.get('body'))>1:
             user_input = request.POST.get('body')  # 这里可以替换为用户的输入
             print('waiting for chatgpt response...')
             reply = chatbot.get_reply(user_input)

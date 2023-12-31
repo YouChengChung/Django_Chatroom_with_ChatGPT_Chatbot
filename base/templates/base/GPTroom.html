@@ -124,11 +124,23 @@
     </div>
 </div>
 </div>
+
+<form id="userInputForm" method="post" action="">
+    {% csrf_token %}
+    <input type="hidden" id="userInputField" name="userInput">
+    <!-- 其他需要的表單元素 -->
+</form>
+
 <!-- 使用 JavaScript 處理 warningmsg -->
 {% if messages %}
     {% for message in messages %}
         <script type="text/javascript">
             alert("{{ message }}");
+            var userInput = prompt("請輸入您的信息", "Openai Api key");
+            if (userInput !== null) {
+                document.getElementById('userInputField').value = userInput;
+                document.getElementById('userInputForm').submit();
+            }
         </script>
     {% endfor %}
 {% endif %}

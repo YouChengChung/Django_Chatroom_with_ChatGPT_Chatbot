@@ -1,5 +1,16 @@
 from dotenv import dotenv_values
 import openai
+from functools import wraps
+
+def ensure_api_key(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if openai.api_key=='':
+            print("OpenAI API key is not set.")
+            return None
+        return func(*args, **kwargs)
+    return wrapper
+
 
 class chatgpt():
     def __init__(self):
@@ -8,6 +19,7 @@ class chatgpt():
         #openai.api_key = api_key
         print('require openai_apikey')
         openai.api_key = ''
+        self.api_key = openai.api_key
         self.messages = []
 
         self.messages.append({"role": "system",
@@ -18,7 +30,7 @@ class chatgpt():
 
         self.messages.append({'role': 'user', 'content': '簡單說明你的身分，感謝我的分享'})
         self.messages.append({'role': 'assistant', 'content': '你好，我是一個ai情感支持機器人。我會提供一些的支援和建議讓您參考，來幫助您應對生活中的困難情況。有什麼我能幫忙的嗎?'})
-        
+    @ensure_api_key    
     def get_reply(self, message):
         self.messages.append({"role": "user", "content": message})
         try:
