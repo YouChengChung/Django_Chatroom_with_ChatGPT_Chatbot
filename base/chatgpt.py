@@ -2,24 +2,36 @@ from dotenv import dotenv_values
 import openai
 from functools import wraps
 
+def api_key_validation():
+    try:
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt="This is a test.",
+            max_tokens=5
+        )
+        return True
+    except:
+        return False
+
 def ensure_api_key(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if openai.api_key=='':
-            print("OpenAI API key is not set.")
+            raise None
+        elif not api_key_validation():
             return None
         return func(*args, **kwargs)
     return wrapper
 
 
 class chatgpt():
-    def __init__(self):
+    def __init__(self,api_key):
         #config = dotenv_values('openaiapikey.txt')
         #api_key = config['API_KEY']
         #openai.api_key = api_key
         print('require openai_apikey')
-        openai.api_key = ''
-        self.api_key = openai.api_key
+        openai.api_key = api_key
+        self.api_key = api_key
         self.messages = []
 
         self.messages.append({"role": "system",
@@ -40,8 +52,8 @@ class chatgpt():
             reply = response["choices"][0]["message"]["content"]
             self.messages.append({"role": "assistant", "content": reply})
         except Exception as e:
-            print(f'GPT get_reply ERROR:{e}')
-            reply=None
+            print(f'Error: {e}')
+            return None
         return reply
     
     def get_previous(self):

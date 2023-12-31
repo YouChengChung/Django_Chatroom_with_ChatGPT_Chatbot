@@ -6,9 +6,8 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm #內建註冊表格
-from .models import Room,Topic,Message,gptMessage
+from .models import Room,Topic,Message,gptMessage,UserProfile
 from .forms import RoomForm ,UserForm #, MyUserCreationForm
-
 
 from .chatgpt import chatgpt
 
@@ -73,6 +72,7 @@ def registerPage(request):
             login(request, user) #註冊完立刻登入
             return redirect('home')
         else:
+            print(form.errors)  # 打印表單錯誤信息以便調試
             messages.error(request, 'An error occurred during registration')
 
     return render(request, 'base/login_register.html',{'form':form})
@@ -235,6 +235,16 @@ def activityPage(request):
     return render(request,'base/activity.html',context)
 
 
+def update_user_api_key(user, api_key):
+    """
+    Update the user's API key in UserProfile.
+    """
+    
+    user_profile, created = UserProfile.objects.get_or_create(user=user)
+    user_profile.openai_api_key = api_key
+    user_profile.save()
+    return created  # 返回一个布尔值，指示是否建了新的 UserProfile(更新的話是false，新增是true)
+
 @login_required(login_url='login')
 def gpt(request):
     gptmsgobjs=gptMessage.objects.filter(user=request.user)
@@ -245,21 +255,30 @@ def gpt(request):
     user_input=""
     warningmsg=""
     if request.method=='POST':
-        chatbot = chatgpt()
+        try:
+            user_profile = request.user.userprofile
+            api_key = user_profile.openai_api_key
+        except UserProfile.DoesNotExist:
+            api_key = None
+        # 檢查是否設置了API密鑰
+        if not api_key:
+            print('here')
+            messages.error(request, "請先設置您的 OpenAI API key。")
+        chatbot = chatgpt(api_key)
         print(f"the openai apikey： {chatbot.api_key}")
-        print(f"request.POST.get('userInput')={request.POST.get('userInput')}")
         prompt_input = request.POST.get('userInput')
-        # 來自prompt的msg
-        if prompt_input:
-            # prompt 输入
+        # 來自prompt的msg(用來更新apikey)
+        if prompt_input:  
+            # print(f"request.POST.get('userInput')={request.POST.get('userInput')}")
             print(f"Received prompt input: {prompt_input}")
+            is_new_api_key = update_user_api_key(request.user, prompt_input)
+            messages.success(request, f"API Key has been updated")
         # input box 輸入
         elif 'body' in request.POST and len(request.POST.get('body'))>1:
             user_input = request.POST.get('body')  # 这里可以替换为用户的输入
             print('waiting for chatgpt response...')
             reply = chatbot.get_reply(user_input)
-            
-            if reply !=None:
+            if reply:
                 gptMessage.objects.create(
                     user = request.user,
                     body = request.POST.get('body'),
@@ -268,7 +287,9 @@ def gpt(request):
 
             else:
                 # js彈出警訊：cant not get gpt's reply
-                messages.warning(request, f"Fail to get response from GPT")
+                messages.warning(request, f"Fail to get response from GPT,try to reset the api_key")
+                
+
             print(f'Print the GPT response：{reply}')
 
 
