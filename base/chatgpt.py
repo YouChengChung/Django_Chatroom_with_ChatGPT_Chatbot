@@ -21,11 +21,15 @@ class chatgpt():
         
     def get_reply(self, message):
         self.messages.append({"role": "user", "content": message})
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=self.messages)
-        reply = response["choices"][0]["message"]["content"]
-        self.messages.append({"role": "assistant", "content": reply})
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=self.messages)
+            reply = response["choices"][0]["message"]["content"]
+            self.messages.append({"role": "assistant", "content": reply})
+        except Exception as e:
+            print(f'GPT get_reply ERROR:{e}')
+            reply=None
         return reply
     
     def get_previous(self):

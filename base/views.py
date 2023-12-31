@@ -243,6 +243,7 @@ def gpt(request):
     #print('gptmsgs:',gptmsgs.gptreply)
     reply  = ''
     user_input=""
+    warningmsg=""
     if request.method=='POST':
         chatbot = chatgpt()
         if len(request.POST.get('body'))>1:
@@ -250,18 +251,25 @@ def gpt(request):
             print('waiting for chatgpt response...')
             reply = chatbot.get_reply(user_input)
             
-            gptMessage.objects.create(
-                user = request.user,
-                body = request.POST.get('body'),
-                gptreply = reply
-            )
-            print(reply)
+            if reply !=None:
+                gptMessage.objects.create(
+                    user = request.user,
+                    body = request.POST.get('body'),
+                    gptreply = reply
+                )
+                warningmsg=False
+            else:
+                # js彈出警訊：cant not get gpt's reply
+                warningmsg=True
+            print(f'Print the GPT response：{reply}')
+
 
             return redirect('chatgpt')
 
     context={'reply':reply,
              'user_input':user_input,
-             'gptmsgs':gptmsgs}
+             'gptmsgs':gptmsgs,
+             'warningmsg':warningmsg}
     return render(request,'base/GPTroom.html',context)
 
 
