@@ -111,7 +111,7 @@
                             {{user_input}}
                         </h1>
                     </div>
-                    <hr>
+                    <   hr>
                     <p>
                         {{reply}}
                     </p>
@@ -124,15 +124,15 @@
     </div>
 </div>
 </div>
-<div>{{ warningmsg }}</div>
 <!-- 使用 JavaScript 處理 warningmsg -->
-<script type="text/javascript">
-    var warningMsg = "{{ warningmsg }}";
-    console.log("Warning message value:", warningMsg);
-
-    if (warningMsg === 'True') {
-        alert('Error');
-    }
-</script>
-
+{% if messages %}
+    {% for message in messages %}
+        <script type="text/javascript">
+            alert("{{ message }}");
+        </script>
+    {% endfor %}
+{% endif %}
+<!-- <script type="text/javascript">
+    alert('這是一個測試');
+</script> -->
 {% endblock %}

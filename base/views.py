@@ -257,10 +257,10 @@ def gpt(request):
                     body = request.POST.get('body'),
                     gptreply = reply
                 )
-                warningmsg=False
+
             else:
                 # js彈出警訊：cant not get gpt's reply
-                warningmsg=True
+                messages.warning(request, f"Fail to get response from GPT")
             print(f'Print the GPT response：{reply}')
 
 
@@ -269,7 +269,7 @@ def gpt(request):
     context={'reply':reply,
              'user_input':user_input,
              'gptmsgs':gptmsgs,
-             'warningmsg':warningmsg}
+             }
     return render(request,'base/GPTroom.html',context)
 
 
