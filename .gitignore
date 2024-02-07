@@ -1,1 +1,3 @@
 base/openaiapikey.txt
+base/__pycache__/*
+chatgpt/__pycache__/*
