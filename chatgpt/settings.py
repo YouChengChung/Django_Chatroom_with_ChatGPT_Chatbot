@@ -86,8 +86,12 @@ WSGI_APPLICATION = 'chatgpt.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'discord',
+        'USER': 'root',
+        'PASSWORD': '0000',
+        'HOST': 'localhost',  # 留空則預設為 localhost
+        'PORT': '3306',  # 留空則預設為 3306
     }
 }
 
